@@ -1,0 +1,956 @@
+\documentclass[12pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{geometry}
+\geometry{margin=1in}
+\usepackage{hyperref}
+\usepackage{graphicx}
+\usepackage{longtable}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+
+
+
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{LACPD1 AWS SRS}
+\lhead{Version 2.5}
+\cfoot{\thepage}
+
+\begin{document}
+\begin{titlepage}
+    \centering
+    \vspace*{2cm}
+
+    {\Huge\bfseries Software Requirements Specification (SRS)\\
+    for\\
+    LACPD1 AWS\\}
+
+    \textbf{Version 2.5}\\
+    12/06/24\\
+
+    \textbf{Prepared by:}\\
+    Niyusha Zarnegar, Dominick Daito Jr, Tuan Khai Tran, Averii Bell,\\
+    Steven Partida, Daniel Hernandez, Viyoka Lim,\\
+    Matthew Sanchez, Luis Rosas\\
+
+    \textbf{Sponsored by:}\\
+    Los Angeles County Public Defender's Office\\
+
+    \vfill
+    {\large \today}
+\end{titlepage}
+
+\tableofcontents
+\setcounter{tocdepth}{3}  
+
+
+\newpage
+
+\section{Introduction}
+\subsection{Purpose}
+The Software Requirements Specification (SRS) document describes a transcript analysis
+ and case management system developed for the Los Angeles County Public Defender’s Office
+ (LACPD). This system is specifically designed to analyze court transcripts and flag police
+ misconduct patterns. The system will integrate AWS cloud services and advanced data science
+ techniques, particularly Natural Language Processing (NLP) and generative AI, to detect
+ potential misconduct, identify key entities (such as officer names and badge numbers), and flag
+ inconsistencies in testimonies for legal use.
+ The SRS aims to ensure all stakeholders, including project sponsors, developers, testers,
+ and legal personnel, have a shared understanding of the system’s capabilities and its role in
+ supporting legal workflows.
+
+
+\subsection{Scope}
+ The Transcript Analysis and Case Management System is a software solution created for
+ the Los Angeles County Public Defender’s Office (LACPD). Its main goal is to improve the
+ efficiency and accuracy of legal workflows by enhancing the analysis of court transcripts. By
+ utilizing AWS cloud services, Natural Language Processing (NLP), and generative AI models,
+ the system provides real-time processing of transcripts, helping legal teams identify critical
+ insights
+
+\textbf{Key Benefits }
+\begin{itemize}
+  \item  Streamlined Workflows: Automates tasks like document review and analysis.
+  \item Accurate Insights: Highlights critical information such as misconduct patterns and
+ inconsistencies.
+  \item  Scalable Design: Adapts to increasing case data without compromising performance.
+
+\textbf{Objectives and Capabilities }
+\begin{enumerate}
+
+    \item Misconduct Detection: 
+	\begin{itemize}
+	 	\item Automatically identify instances of police misconduct based on flagged patterns or
+			 keywords in transcripts and evidence documents.
+	 	\item  Highlight repeated behaviors or systemic issues to strengthen arguments
+	\end{itemize}
+    \item Entity  Extraction:
+	\begin{itemize}
+		 \item Extract and categorize important entities such as officer names, badge numbers, dates,
+	 		and locations.
+	 	\item Present these entities in a structured, searchable format for quick reference
+	\end{itemize}
+    \item Testimony Analysis:
+	\begin{itemize}
+		\item Analyze witness statements and cross-reference them to identify contradictions or
+ 			inconsistencies.
+		\item  Highlight tone shifts or emotional language that may impact case outcomes
+	\end{itemize}
+    \item Scalability and Performance:
+	\begin{itemize}
+		\item  Leverage cloud-based infrastructure to process and store large volumes of legal
+ 			documents.
+		\item Maintain low latency for real-time document retrieval and analysis, even with complex
+  			cases.
+	\end{itemize}
+\end{enumerate}
+
+
+\textbf{Applications and Benefits }
+
+ \textbf{Applications}
+\begin{enumerate}
+    \item Legal Case Preparation:
+	\begin{itemize}
+	 	\item  Streamlines the review of transcripts and documents, allowing attorneys to focus on
+ 			building arguments
+	\end{itemize}
+    \item  Legal Research:
+	\begin{itemize}
+		 \item Assists in identifying patterns or precedents relevant to ongoing cases
+	\end{itemize}
+\end{enumerate}
+
+\textbf{Benefits }
+\begin{itemize}
+  \item   TimeEfficiency: Automates repetitive tasks, reducing manual effort
+  \item  ImprovedAccuracy: Minimizes human error by flagging critical issues
+  \item  EnhancedInsights: Provides actionable information that strengthens case strategies
+ \item  Scalability: Accommodates growing data demands and user bases seamlessly
+\end{itemize}
+
+
+ \textbf{Exclusion:}
+\begin{enumerate}
+    \item Judgment Prediction:
+	\begin{itemize}
+	 	\item   The software does not predict case outcomes or court decisions
+	\end{itemize}
+    \item Complex Legal Interpretation:
+	\begin{itemize}
+		 \item  It does not replace attorney expertise in interpreting legal arguments or evidence
+	\end{itemize}
+    \item  Manual Data Input:
+	\begin{itemize}
+		 \item   Requires users to upload documents and provide metadata manually; it cannot fetch data
+ from external sources
+	\end{itemize}
+    \item  Cross-Language Analysis:
+	\begin{itemize}
+		 \item   Currently limited to documents in English; non-English transcripts require
+ pre-translation.
+	\end{itemize}
+\end{enumerate}
+\end{itemize}
+
+
+
+
+\subsection{Overview}
+ This SRS document is organized as follows:
+\begin{itemize}
+  \item Section 1: Provides an introduction, including the purpose, scope, and structure of the
+ document
+  \item  Section 2: Describes the general factors affecting the software, including the product
+ perspective, product functions, and user characteristics
+  \item  Section 3: Details the specific software requirements, including functional requirements,
+ external interfaces, and performance criteria
+  \item Section 4: Lists any references to external documents or standards used in this specification
+\end{itemize}
+
+\subsection{Definitions, Acronyms, and Abbreviations}
+ There will be more in Appendix A: Glossary
+
+\subsection{References}
+\begin{itemize}
+  \item  Provide a complete list of all documents referenced elsewhere in the SRS;
+  \item  Identify each document by title, report number (if applicable), date, and publishing
+ organization
+\end{itemize}
+
+\section{General Description}
+\subsection{Product Perspective}
+ The LACPD Transcript Analysis System is a cloud-based software solution developed as a
+ standalone application that integrates into LACPD’s existing case management workflow. The
+ system will utilize Box.com for data storage and AWS cloud services for computing power and
+ machine learning model hosting. It will use Natural Language Processing (NLP) models to
+ extract key information and classify different segments of the court transcripts. The product will
+ also provide a web-based interface for querying and visualizing the relationships between
+ various cases
+
+ 
+\begin{itemize}
+    \item \textbf{System Interfaces:}
+	\begin{itemize}
+	 	\item   Thesystem interacts with LACPD's case management processes by enabling the manual
+ upload and export of relevant case data, such as court documents and transcripts. While
+ direct integration through APIs with LACPD’s existing systems is currently dependent on
+ their approval and infrastructure capabilities, the system is designed to be
+ integration-ready. This allows for future API-based synchronization, should LACPD
+ permit direct data exchange. Exported insights and flagged data can be provided in
+ widely compatible formats (e.g., JSON, XML, CSV) for manual or automated
+ re-integration into external tools. Key data such as case details, court record hearings,
+ transcripts, and other relevant documents will be exchanged, reducing the need for
+ manual input.
+	\end{itemize}
+    \item \textbf{User Interfaces}
+	\begin{itemize}
+		 \item  The user interface is designed to be minimalistic, clean, and easy to use
+		 \item  Being intuitive, it allows LACPD personnel to easily utilize and navigate data
+ 		\item TheUIwill allow users to query court transcripts, view analysis results, and explore
+			 visualized data relationships through web-based dashboards
+	\end{itemize}
+    \item  \textbf{Hardware Interfaces:}
+	\begin{itemize}
+
+		\item Requires minimal hardware. Users will access the system through standard
+			 internet-connected devices
+		\item  Functionality will occur on all screen sizes and device types while being optimized for low resources
+	\end{itemize}
+    \item  \textbf{Software Interfaces}
+	\begin{itemize}
+		 \item    Utilizes standard libraries for NLP tasks and may integrate with other LACPD software tools.
+		\item Wemayinclude libraries such as spaCy or NLTK for text processing and TensorFlow or PyTorch for machine learning tasks.
+		\item  Thesoftware will also handle basic data formats like PDFs, plain texts, and structured data for importing and exporting transcripts
+	\end{itemize}
+    \item  \textbf{ Communications Interfaces}
+	\begin{itemize}
+		 \item    Datawill be transmitted securely over the Internet using HTTPS encryption. The system
+ will comply with LACPD's communications protocols for data integrity and
+ confidentiality
+	\end{itemize}
+    \item  \textbf{ Memory}
+	\begin{itemize}
+		 \item    Efficiently manage memory usage, particularly during data processing phrases.
+ Dynamically allocate resources based on system demands
+	\end{itemize}
+    \item  \textbf{Operations}
+	\begin{itemize}
+		 \item    Operated by the LACPD IT department with guidelines in place for updates, security
+ checks, and user support. Regular maintenance will be held to ensure proper functionality
+ and the latest support.
+	\end{itemize}
+    \item  \textbf{ Site Adaptation Requirements}
+	\begin{itemize}
+		 \item    Thedeployment will be tailored to the LACPD operational environment such as a variety
+ of cases, workflow, training management, and data backup and recovery
+		\item Asthedepartment continues to grow, further updates will be pushed to adhere to different
+ changes.
+	\end{itemize}
+\end{itemize}
+
+\subsection{Product Functions}
+\begin{itemize}
+  \item  Real-time Transcript Ingestion and optional OCR Processing: Allow upload of court
+ transcripts in various formats (PDF, DOCX), converting non-searchable text into searchable
+ format where needed. OCR Processing will be used as a failsafe
+	\begin{itemize}
+	\item     If the file includes non-machine-readable text (e.g., scanned transcript), OCR is applied to extract content.
+	\end{itemize}
+
+  \item TextAnalysis, Entity Extraction, and Misconduct Detection: Utilize NLP and generative AI
+ models to identify and extract key entities (e.g., officer names, badge numbers, locations,
+ dates, charges). The system will analyze transcripts to detect potential patterns of misconduct
+ or inconsistencies within and across transcripts
+
+  \item Relationship Linking and Case Correlation: Use machine learning algorithms to identify
+ links between cases based on shared attributes and contextual similarities, presenting
+ attorneys with visual case connections.
+
+  \item  Multi-Level Flagging System: Generate flags on transcripts and highlight key findings.
+ Flagging will incorporate color-coded indicators to convey levels of confidence in
+ misconduct detection (e.g., red for high-confidence flags, yellow for moderate).
+\end{itemize}
+
+\subsection{User Characteristics} 
+The intended users of the system include:
+\begin{itemize}
+  \item Attorneys, Paralegals, Legal Assistants
+	\begin{itemize}
+	\item     Attorney
+		\begin{itemize}
+		\item    Varying levels of experience from recent law school graduates to years of practice
+		\item  Familiar with databases and case management software
+		\end{itemize}
+	\item  Paralegals and Legal Assistants:
+		\begin{itemize}
+		\item     Education level often includes an associate's degree or bachelor's degree. A certificate in paralegal studies would be a bonus
+		\item Experience typically possesses some years in legal environments, such as document management, case preparation, and client interaction
+		\item  Technical expertise may be familiar with legal documentation and basic software tools
+		\item They mayhavespecialized training in investigative techniques and are comfortable with technological tools.
+		\end{itemize}
+	\end{itemize}
+  \item LACPD IT Administrators: Utilize the management portal to ensure the proper state and
+ function of the software system
+	\begin{itemize}
+	\item      LACPD IT Administrators
+		\begin{itemize}
+		\item     Education level often carries a degree in information technology or computer science
+		\item Experience in managing software systems and security performance
+		\item Technical Expertise includes a high level of technical knowledge with proficiency in software management, system integration, and data security
+		\end{itemize}
+	\end{itemize}
+\end{itemize}
+
+\subsection{General Constraints}
+\begin{itemize}
+  \item The system must comply with LACPD’s data privacy and security regulations.
+  \item AWS cloud services will be the primary platform for all data processing and storage.
+  \item The system must support multi-user access with role-based permissions.
+  \item The system should have a 24 hour RPO and a <= 6 hour RTO
+\end{itemize}
+
+\subsection{Assumptions and Dependencies}
+\textbf{ Availability of Training Data (Transcripts)}
+\begin{itemize}
+  \item Thedevelopment and effectiveness of machine learning models for this project rely on
+ continuous access to accurate, high-quality transcripts. Court transcripts, as the primary data
+ source, must be:
+	\begin{itemize}
+		\item   Timely and accurately transcribed, capturing recent cases and maintaining consistent language patterns
+		\item  Formatted uniformly to support reliable processing across models
+		\item Extensive enough to enable effective model training for accurate insights
+	\end{itemize}
+  \item  Any issues, such as delays or formatting inconsistencies, could significantly impact the
+ model’s performance. Therefore, uninterrupted access to high-quality transcripts is critical to
+ project success
+\end{itemize}
+
+\textbf{ Integration with LACPD’s Case Management System (CMS) and Other Databases}
+\begin{itemize}
+  \item  Successful implementation requires seamless integration with LACPD’s existing CMS and
+ related databases, allowing the system to retrieve relevant data, process it, and store results.
+ Key integrations include:
+
+	\begin{itemize}
+		\item    Bi-directional data exchange with LACPD’s CMS to enable real-time updates, facilitating immediate availability of flagged information.
+		\item   Secure APIs for data transfers to maintain data integrity and confidentiality across systems.
+
+	\end{itemize}
+  \item Any interruptions or updates to LACPD’s existing systems may impact the functionality and
+ performance of the machine learning models. Ensuring compatibility and establishing
+ reliable communication protocols with these systems is essential to maintain a seamless
+ workflow for the legal team
+\end{itemize}
+
+\textbf{  AWS Infrastructure and Service Availability}
+\begin{itemize}
+  \item  AWS infrastructure will support scalable, flexible, and secure deployment for model training,
+ inference, and data storage. The system will rely on specific AWS services, such as
+	\begin{itemize}
+		\item    SageMaker: For model training, inference, and deployment
+		\item  Box.com: For secure storage of transcript data and associated metadata.
+		\item  Comprehend: For Natural Language Processing and key entity extraction.
+	\end{itemize}
+  \item The assumption is that AWS services will remain accessible, reliable, and cost-effective
+ throughout the project lifecycle. Any changes or interruptions to these services, such as
+ unexpected downtimes or cost increases, may impact project timelines, budget, and
+ outcomes.
+\end{itemize}
+
+\textbf{  Data Security and Compliance Requirements}
+\begin{itemize}
+  \item   Thesystem must comply with LACPD’s data privacy and security policies, as well as
+ applicable legal and regulatory standards. This includes:
+	\begin{itemize}
+		\item    Adherence to secure data handling practices within AWS, such as encryption at rest and in transit, to protect sensitive case information.
+		\item Role-based access control to ensure that only authorized personnel can access the system’s data and functions
+
+	\end{itemize}
+  \item Maintaining this security and compliance is critical to building a trusted system for legal use,
+ and any changes in policy may require updates to the system’s design or architecture
+\end{itemize}
+
+\section{Requirements}
+\subsection{Functional Requirements}
+
+\textbf{ Transcript Upload and Storage}
+\begin{itemize}
+  \item \textbf{Description} The system shall allow users to upload court transcripts in supported formats
+ (PDF, DOCX). OCR will convert any non-searchable document text into a searchable format
+  \item \textbf{Requirement}  The system shall store all uploaded and processed transcripts in Box.com with
+ encryption, ensuring secure access for authorized personnel.
+\end{itemize}
+
+\textbf{ Text Analysis, Key Entity Extraction, and Misconduct Detection}
+\begin{itemize}
+  \item \textbf{Description} The system shall utilize NLP models to extract key entities within transcript
+ text (e.g., officer names, badge numbers, locations, charges) and detect misconduct patterns
+ or inconsistencies, automatically flagging critical sections for legal review
+  \item \textbf{Requirement} AWS Comprehend or an equivalent NLP model will handle entity extraction
+ and misconduct detection. Results will be stored in a structured, searchable format accessible
+ to authorized users.
+\end{itemize}
+
+\textbf{  Case Linking and Relationship Detection}
+\begin{itemize}
+  \item \textbf{Description} The system shall identify and link related cases by analyzing shared attributes
+ or contextual similarities, providing visual connections for easier analysis and tracking.
+  \item \textbf{Requirement}  The system shall employ clustering or similarity algorithms to detect and
+ present case relationships to users through an intuitive interface, facilitating cross-case
+ analysis.
+\end{itemize}
+
+\textbf{ Multi-Level Flagging System}
+\begin{itemize}
+  \item \textbf{Description} The system shall generate color-coded flags within transcripts, indicating
+ varying confidence levels in detected issues (e.g., red for high-confidence flags, and yellow
+ for moderate confidence).
+  \item \textbf{Requirement}   Flags shall be generated and applied automatically by the system based on
+ NLPanalysis results, with options for users to export flagged sections or entire transcripts in
+ PDF or CSVformats for further review and case reporting.
+\end{itemize}
+
+\subsection{External Interface Requirements}
+
+
+\textbf{  Dashboard}
+\begin{itemize}
+  \item \textbf{Purpose} Central hub for accessing and managing case information
+  \item \textbf{Key features}   
+	\begin{itemize}
+		\item  Overview of Active Cases: Display a list of ongoing cases with quick links to associated
+ documents
+		\item Recent Activity Feed: Show recently uploaded, reviewed, or flagged documents
+		\item  Notifications Panel: Highlight critical updates, such as flagged issues, pending uploads,
+ or incomplete tasks.
+		\item Search Bar: Provide a global search tool for locating cases, transcripts, or flagged
+ information.
+		\begin{itemize}
+			\item    Adherence to secure data handling practices within AWS, such as encryption at rest and in transit, to protect sensitive case information.
+			\item Role-based access control to ensure that only authorized personnel can access the system’s data and functions
+		\end{itemize}
+	\end{itemize}
+\end{itemize}
+
+\textbf{  Case Explorer}
+\begin{itemize}
+  \item \textbf{Purpose} Allow users to manage and organize case-related files
+  \item \textbf{Key features}   
+	\begin{itemize}
+		\item   File Directory: Organized folder structure by case ID, client name, or metadata tags.
+		\item Filter Options: Enable sorting by date, document type, flagged issues, or entity mentions.
+		\item  BulkActions: Allow multiple files to be uploaded, moved, or annotated simultaneously.
+	\end{itemize}
+  \item \textbf{Notes}   
+	\begin{itemize}
+		\item    Adherence to secure data handling practices within AWS, such as encryption at rest and in transit, to protect sensitive case information.
+		\item Role-based access control to ensure that only authorized personnel can access the system’s data and functions
+	\end{itemize}
+
+\end{itemize}
+
+\textbf{ Document Viewer}
+\begin{itemize}
+  \item \textbf{Purpose}  Provide a workspace for attorneys to analyze and interact with case documents.
+  \item \textbf{Key features}   
+	\begin{itemize}
+		\item  Export Options: Allow attorneys to download annotated or flagged versions of documents.
+		\item Entity Insights: Present identified entities (e.g., officer names, badge numbers) in an interactive side panel.
+		\item Annotations: Enable users to add notes, highlight key sections, or bookmark pages
+		\item   Search Within Document: Allow users to search for specific terms or phrases in the transcript
+		\item Split-Screen View:
+		\begin{itemize}
+			\item     Left Panel: Display the full transcript or case document
+			\item Right Panel: Highlight flagged content (e.g., misconduct patterns, inconsistencies).
+		\end{itemize}
+	\end{itemize}
+  \item \textbf{Notes}   
+	\begin{itemize}
+		\item    Version Control: Include a feature to track changes and view previous versions of annotated documents
+	\end{itemize}
+\end{itemize}
+
+\textbf{   Advanced Search and Filter}
+\begin{itemize}
+  \item \textbf{Purpose}  Help users find specific information quickly
+  \item \textbf{Key features}   
+	\begin{itemize}
+		\item  Global Search: Search across all cases for transcripts, flagged issues, or specific keywords.
+		\item SavedSearches: Let users save frequent searches for future use.
+		\item Advanced Filters: Narrow down results based on
+		\begin{itemize}
+			\item     Daterange.
+			\item  Document type (e.g., transcript, evidence).
+			\item Metadata (e.g., client name, case ID).
+		\end{itemize}
+	\end{itemize}
+\end{itemize}
+
+\textbf{  Insights and Reports}
+\begin{itemize}
+  \item \textbf{Purpose} Simplify the process of adding documents to the system
+  \item \textbf{Key features}   
+	\begin{itemize}
+		\item   Drag-and-Drop Upload: Allows users to easily drag and drop files for upload
+		\item  File Validation: Immediately check file type, size, and format compatibility.
+		\item  Progress Indicator: Show upload status with estimated time to completion
+		\item  Error Handling: Notify users of issues (e.g., file too large) with actionable guidance.
+	\end{itemize}
+\end{itemize}
+
+\textbf{  Upload Interface}
+\begin{itemize}
+  \item \textbf{Purpose} Central hub for accessing and managing case information
+  \item \textbf{Key features}   
+	\begin{itemize}
+		\item  Overview of Active Cases: Display a list of ongoing cases with quick links to associated
+ documents
+		\item Recent Activity Feed: Show recently uploaded, reviewed, or flagged documents
+		\item  Notifications Panel: Highlight critical updates, such as flagged issues, pending uploads,
+ or incomplete tasks.
+		\item Search Bar: Provide a global search tool for locating cases, transcripts, or flagged
+ information.
+		\begin{itemize}
+			\item    Adherence to secure data handling practices within AWS, such as encryption at rest and in transit, to protect sensitive case information.
+			\item Role-based access control to ensure that only authorized personnel can access the system’s data and functions
+		\end{itemize}
+	\end{itemize}
+\end{itemize}
+
+\textbf{  Notifications and Alerts}
+\begin{itemize}
+  \item \textbf{Purpose}  Keep users informed about system activity and issues.
+  \item \textbf{Key features}   
+	\begin{itemize}
+		\item   Success Notifications: Confirm successful actions (e.g., "File uploaded successfully").
+		\item Error Alerts: Notify users of system errors with clear instructions (e.g., "Connection lost.
+ Please try again.").
+		\item   Reminders: Prompt users about pending actions or deadlines (e.g., "Review flagged
+ documents in Case number 12345.").
+
+	\end{itemize}
+\end{itemize}
+
+\textbf{  User Settings and Preferences}
+\begin{itemize}
+  \item \textbf{Purpose }Allow customization to enhance user experience.
+  \item \textbf{Key features}   
+	\begin{itemize}
+		\item  Profile Settings: Update user details, such as name or role
+		\item  Accessibility Options: Adjust font size, color contrast, or language preferences.
+		\item   Notification Preferences: Choose how and when to receive alerts (e.g., email or in-app)
+	\end{itemize}
+\end{itemize}
+
+
+
+
+\subsection{User Interfaces}
+
+\begin{itemize}
+  \item The User Interface of the LACPD Transcript Analysis System is crucial for ensuring that
+ users, regardless of their technical expertise can easily utilize and interact with the system to
+ perform their tasks efficiently and accurately. This section will specify the requirements for
+20 the system's user interfaces, including configuration details, content organization, and guidelines for optimizing user experience.
+	\begin{itemize}
+		\item   Requirements of Each Interface Between the Software Product and Its Users
+		\begin{itemize}
+			\item  Dashboard: The system's primary screen should be a dashboard that provides users with an overview of their current tasks and cases. The dashboard will include:
+			\begin{itemize}
+				\item  A case search bar for navigation and retrieval of court transcripts
+				\item Visualizations of case relations (graphs, charts, etc)
+				\item Summaryofrecently accessed cases and documents.
+				\item Quickaccess buttons for common tasks such as “Analyze Transcripts”, “Download Report”, and “View Case History”.
+			\end{itemize}
+		\end{itemize}
+		\begin{itemize}
+			\item   Search Results and Case View: When a user performs a search, the result should be displayed in an easy-to-read format, showing key metadata such as:
+			\begin{itemize}
+				\item   Case ID
+				\item Case Title
+				\item Case Date
+				\item A summary of the transcripts
+				\item  The user can click on individual results for more detailed information including full analysis.
+			\end{itemize}
+		\end{itemize}
+		\begin{itemize}
+			\item Analysis Results: When a transcript is processed, the results should be displayed in a structured format that includes:
+			\begin{itemize}
+				\item  Key entities (e.g. names, locations, charges, etc.) highlighted within the transcript
+				\item Categorized segments of the transcript (e.g. introduction, witness testimony, verdict, etc)
+				\item  Confidence score that indicates the reliability of the model analysis.
+				\item  Interactive graphs or charts displaying relationships between entities (e.g. the relationship between defendants, witness, and location.)
+			\end{itemize}
+		\end{itemize}
+		\begin{itemize}
+			\item  Reports and Exports: The system will allow users to download reports summarizing the analysis results. Reports will include:
+			\begin{itemize}
+				\item  Full court transcripts with analysis annotations.
+				\item Summary tables of key information.
+				\item Charts for insights
+			\end{itemize}
+		\end{itemize}
+		\begin{itemize}
+			\item   Error or Confirmation Notification: When users interact with the system, feedback involving error and confirmation notifications will be given to help users navigate the user interface.
+			\begin{itemize}
+				\item  Error message (e.g. “Invalid case ID”)
+				\item Success message (e.g. “Report generated successfully!”)
+			\end{itemize}
+		\end{itemize}
+		\begin{itemize}
+			\item  Navigation and Interaction: The interface should provide navigation menus with clear labels to access various sections of the application, such as:
+			\begin{itemize}
+				\item  Case Search
+				\item Transcript Analysis
+				\item Reports
+				\item  Settings/Configuration (admin/IT staff)
+			\end{itemize}
+		\end{itemize}
+		\begin{itemize}
+			\item  A back button will allow users to return to the previous screen or dashboard.
+		\end{itemize}
+		\begin{itemize}
+			\item  Content Formatting
+			\begin{itemize}
+				\item   Reports should be organized in a readable manner and format. Key fields such as case numbers, dates, and extracted entities will be presented in a tabular format where filtering and sorting will be an option	
+			\end{itemize}
+		\end{itemize}
+	\end{itemize}
+  \item General Interface Characteristics
+	\begin{itemize}
+		\item   Consistency: The software shall maintain a consistent look and feel across all screens and modules, including uniform color schemes, fonts, and button styles
+		\item   Responsiveness: The interface shall be responsive and adapt to various screen sizes and resolutions.
+	\end{itemize}
+  \item Optimizing User Interaction
+	\begin{itemize}
+		\item   Do’s
+		\begin{itemize}
+			\item Provide Immediate Feedback: The system shall offer immediate visual or auditory feedback in response to user actions (e.g., button clicks, documentation download)
+			\item  UseFamiliar Icons and Symbols: Commonly recognized icons shall be used to represent standard actions
+		\end{itemize}
+
+		\item   Don’t
+		\begin{itemize}
+			\item   Information Overload: The interface shall not display unnecessary information that may overwhelm the user.
+		\end{itemize}
+	\end{itemize}
+
+\end{itemize}
+
+\subsection{Hardware Interfaces}
+\begin{itemize}
+  \item The system shall support interaction with AWS cloud hardware for model training and deployment
+\end{itemize}
+
+\subsection{ Software Interfaces}
+ \textbf{  Amazon EC2}\\
+ Name: Amazon Elastic Compute Cloud\\
+ Mnemonic: EC2\\
+ Specification Number: AWS-EC2-001\\
+ Version Number: Latest available at project initiation\\
+ Source: AWS
+
+ \textbf{  Purpose:}\\
+ EC2 instances provide computational resources to support model inference, data processing, and
+ other computationally intensive tasks as required by the system.
+
+ \textbf{  Interface Definition:}\\
+ Input: Compute job requests (e.g., for data preprocessing or model inference).\\
+ Output: Processed data passed to storage services like S3 or directly to SageMaker for further
+ analysis.\\
+
+ Format Reference: AWS EC2 API (AWS Developer Documentation) for starting, stopping, and
+ monitoring instances.
+\begin{itemize}
+  \item AWS Services: The system shall use AWS SageMaker for NLP model training and
+ inference, S3 for secure storage of transcripts, and EC2 for computational needs. Data
+ processed on AWS will be encrypted and accessible only to authenticated users.
+  \item The system shall use AWS SDKs to interact with cloud services and APIs for external
+ communication.
+\item The system shall use Box.com to store testimony transcripts and other related documents
+ securely.
+\item The system shall integrate with Box.com for secure cloud storage and management of court
+ transcripts and related documents.
+\end{itemize}
+
+\subsection{Communications Interfaces}
+\begin{itemize}
+  \item The system shall use secure HTTPS protocols for all data transfers and communications
+ between the client and the web server
+  \item  The system shall use AWS’s encryption and associated security services to ensure the data
+ stays secure throughout the data pipeline including storage
+
+\end{itemize}
+
+\section{Requirements Specification}
+See Section 3 for detailed breakdown. Structured JSON/CSV export capabilities, graph databases, and referential integrity required.
+
+\subsection{Functional Requirements}
+\subsubsection{Transcript Upload and Storage}
+\begin{itemize}
+  \item  The system shall allow users to upload court transcripts in supported formats (PDF, DOCX)
+  \item  The system may apply OCR to convert non-machine-readable transcripts into searchable text.
+\item The system shall store all uploaded transcripts securely in Box.com, with encryption at rest
+ and in transit
+\item The system shall associate uploaded transcripts with case metadata, such as case ID, date,
+ and document type, for efficient organization and retrieval
+\end{itemize}
+
+\subsubsection{Text Analysis, Entity Extraction, and Misconduct Detection}
+\begin{itemize}
+  \item   The system shall utilize NLP models to identify key entities (e.g., officer names, badge
+ numbers, locations) within transcripts.
+  \item  The system shall detect and flag potential misconduct patterns, including inconsistencies
+ within transcripts and related cases.
+\item  The system shall generate structured, searchable outputs for all analysis results, including
+ entity lists and flagged sections.
+\item The system shall calculate and display confidence scores for flagged findings
+\end{itemize}
+
+\subsubsection{Case Linking and Relationship Detection}
+\begin{itemize}
+  \item   The system shall analyze shared attributes or contextual similarities between cases to identify
+ relationships.
+  \item  The system shall present case linkages visually, using graphs or relationship diagrams, to
+ highlight connections and shared entities
+\item   The system shall allow users to filter relationship results by criteria such as case date,
+ involved parties, or flagged patterns
+\end{itemize}
+
+\subsubsection{Multi-Level Flagging System}
+\begin{itemize}
+  \item   The system shall assign color-coded flags to indicate levels of confidence in detected
+ misconduct patterns (e.g., red for high confidence, yellow for moderate).
+
+  \item  The system shall allow users to view and manage flagged sections within the transcript
+ viewer
+\item  The system shall enable the export of flagged findings and associated metadata in formats
+ such as PDF or CSV
+\end{itemize}
+
+\subsection{External Interface Requirements}
+\subsubsection{Dashboard}
+\begin{itemize}
+  \item  The system shall provide a dashboard displaying active cases, recent activity, and
+ notifications.
+  \item  The system shall include a global search bar to locate cases, transcripts, or flagged findings.
+
+\end{itemize}
+
+\subsubsection{Case Explorer}
+\begin{itemize}
+  \item   The system shall allow users to organize and manage case-related documents using folder
+ structures.
+  \item  The system shall support filtering and sorting by attributes such as document type, upload
+ date, and flagged status.
+\end{itemize}
+
+\subsubsection{Document Viewer}
+\begin{itemize}
+  \item    The system shall provide a split-screen view with the transcript on one side and flagged
+ content on the other.
+  \item   The system shall support annotations, bookmarking, and interactive exploration of entities.
+\end{itemize}
+
+\subsubsection{ Advanced Search and Filter}
+\begin{itemize}
+  \item   The system shall allow users to perform global searches across all cases using keywords or
+ metadata.
+
+  \item   The system shall support advanced filters such as date range, document type, or flagged
+ content status.
+\end{itemize}
+
+
+\subsubsection{ Insights and Reports}
+\begin{itemize}
+  \item    The system shall generate summary reports of flagged misconduct, identified entities, and
+ key case insights.
+  \item  The system shall allow export of reports in multiple formats, including PDF and Excel.
+\end{itemize}
+
+
+\subsubsection{Upload Interface}
+\begin{itemize}
+  \item  The system shall support drag-and-drop file uploads and manual file selection.
+  \item  The system shall provide real-time validation feedback for file type and size
+\end{itemize}
+
+
+\subsubsection{ Notifications and Alerts}
+\begin{itemize}
+  \item   The system shall notify users of key events, such as flagged document readiness or pending
+ tasks
+  \item  The system shall provide error messages with actionable guidance for troubleshooting.
+\end{itemize}
+
+\subsection{Logical Database Requirements}
+\begin{itemize}
+  \item The system shall maintain a database linking transcripts, flagged findings, and associated metadata
+  \item  Thesystem shall enforce referential integrity between cases, documents, flags, and metadata tables
+\item The system shall store relationships between cases using graph structures for efficient retrieval and visualization
+\item  The system shall support indexing for search capabilities on attributes such as case ID, entity type, and flagged content.
+\end{itemize}
+
+\subsection{Design Constraints}
+\begin{itemize}
+  \item The system shall comply with AWS’s encryption standards for data security, including AES-256 for data at rest and TLS for data in transit.
+  \item The system shall support real-time processing of large datasets, scaling horizontally using AWS services like SageMaker and EC2.
+\item The system shall adhere to role-based access control (RBAC) to restrict access based on user roles and permissions.
+\item  The system shall ensure compatibility with existing LACPD tools, including Box.com and Salesforce.
+\item The system shall achieve a recovery time objective (RTO) of less than or equal 6 hours and a recovery point objective (RPO) of 24 hours
+\end{itemize}
+
+\section{Other Nonfunctional Requirements}
+\subsection{Performance Requirements}
+\begin{itemize}
+  \item UserCapacity: The system is expected to support multiple simultaneous users, including
+ attorneys, investigators, and administrative staff. The exact number of supported users under
+ normal and peak conditions will be determined after the client's consultation and a detailed
+ workload analysis.
+  \item Response Time: The system should provide acceptable response times for user actions,
+ including uploading documents, retrieving flagged findings, and performing searches.
+ Specific response time thresholds will be defined based on user feedback and operational
+ requirements gathered during implementation
+\item Data Processing: The system shall efficiently handle data upload, processing, and retrieval
+ tasks. Detailed processing speed and throughput benchmarks will be established after further
+ testing with realistic transcript datasets.
+\item Scalability: The system shall be designed to scale horizontally to accommodate increasing
+ user demand and data volumes. Specific scalability targets will be refined after the client's
+ input and evaluation of operational needs
+\end{itemize}
+
+\subsection{Safety Requirements}
+\begin{itemize}
+  \item  The system shall provide safeguards to ensure the integrity and security of sensitive legal
+ data.
+  \item In the event of a system failure, the system shall implement measures to preserve data
+ integrity and enable recovery within the defined RTO of less than or equal to 6 hours.
+  \item  The system shall include fail-safe mechanisms to prevent accidental data loss or corruption
+ during processing or user operations.
+\item The system shall adhere to industry standards for legal software to prevent unauthorized
+ access, misuse, or data breaches that could harm clients or attorneys.
+\end{itemize}
+
+\subsection{Security Requirements}
+\begin{itemize}
+  \item The system shall enforce role-based access control (RBAC) to ensure that only authorized
+ personnel can access sensitive data and perform specific operations
+  \item All data at rest shall be encrypted using AES-256, and all data in transit shall be encrypted
+ using TLS protocols
+\item The system shall require multi-factor authentication (MFA) for all users with administrative
+ roles.
+\item  Logs of all user activities, including access, modifications, and uploads, shall be maintained
+ for auditing purposes
+\item The system shall comply with legal and regulatory standards, such as GDPR and CCPA, as
+ well as the LACPD's internal data security policies.
+\item   Regular security audits and penetration testing shall be conducted to identify and address
+ vulnerabilities.
+\end{itemize}
+
+\subsection{Quality Attributes}
+\begin{itemize}
+  \item Adaptability: The system shall be adaptable to changes in legal workflows and easily
+ configurable to accommodate updates in legal standards or organizational needs
+  \item Availability: The system shall be operational 24/7 with an uptime of at least 99.5%, except
+ during scheduled maintenance.
+\item  Reliability: The system shall ensure accurate and consistent results across all transcript
+ analyses, with error rates kept below a predefined threshold to be determined after initial
+ testing
+\item Maintainability: The system shall be modular to facilitate updates and maintenance,
+ ensuring minimal downtime and impact on users during upgrades.
+\item  Interoperability: The system shall integrate seamlessly with Box.com, AWS, and other
+ LACPD tools, ensuring data exchange without compatibility issues.
+\item  Usability: The user interface shall be intuitive and easy to navigate, ensuring minimal
+ training requirements for end-users.
+\end{itemize}
+
+\subsection{Business Rules}
+\begin{itemize}
+  \item Attorneys and investigators shall have access only to case files assigned to them, as per
+ LACPD’s case management policies.
+  \item Administrative staff shall have read-only access to case documents unless explicitly granted
+ editing permissions
+  \item All flagged findings shall require manual review by authorized legal personnel before
+ inclusion in court submissions
+\item Data retention policies shall comply with LACPD’s guidelines, ensuring that case files are
+ archived or deleted based on predefined timelines
+\item  External analysts and consultants shall be granted temporary access to specific cases or
+ reports, with access automatically revoked after a set duration.
+\item All system changes or updates shall require approval from LACPD IT administrators before
+ deployment
+\end{itemize}
+
+\section{Legal and Ethical Considerations}
+ This project addresses key legal and ethical challenges, including user privacy, potential harm,
+ intellectual property, and system security. Adhering to the ACM Code of Ethics and Professional
+ Conduct, our approach ensures compliance with ethical standards and legal requirements.\\
+ User Privacy:\\
+ Handling sensitive court transcripts requires compliance with principles 1.6 (Respect
+ Privacy) and 1.7 (Honor Confidentiality). We minimize data collection, anonymize records
+ where feasible, and implement encryption and role-based access controls to secure sensitive
+ information. The system complies with GDPR, CCPA, and LACPD-specific privacy standards,
+ ensuring users’ transparency and control over their data.\\
+ Avoiding Harm:\\
+ To mitigate risks like biased analyses or misuse, we follow principle 1.2 (Avoid Harm) by
+ testing and validating NLP models to reduce errors and biases. Security protocols, including
+ HTTPS and AWSservices, protect against unauthorized access. Flagged results support
+ attorneys’ decisions without replacing their expertise.\\
+ Intellectual Property:\\
+ The intellectual property rights for the LACPD Transcript Analysis System will reside
+ exclusively with the Los Angeles Public Defender’s Office (LACPD). All software components,
+ including the Natural Language Processing (NLP) models, machine learning pipelines, and user
+ interface designs, are developed specifically for LACPD's use and are the sole property of the
+ organization. Additionally, any case-related data, transcripts, or other sensitive information
+ processed within the system remains under the ownership of LACPD, and the system is designed
+ not to retain or use this data beyond its intended scope. To protect the integrity of this intellectual
+ property, the system employs secure communication protocols, such as HTTPS, ensuring that
+ data exchanged between LACPD systems and the application remains confidential and secure.\\
+ System Security:\\
+ Aligned with Principle 2.9, the system leverages AWS services for scalable, reliable, and
+ secure deployment. Regular updates and thorough security audits are conducted to ensure
+ compliance with evolving industry standards, safeguarding the system against potential
+ vulnerabilities and maintaining the trust of stakeholders.
+ The system prioritizes privacy and minimizes potential harm by implementing robust data
+ protection measures, respecting intellectual property rights, and adhering to legal and ethical
+ guidelines. By integrating these practices, the system delivers actionable insights while ensuring
+ data security, user confidentiality, and ethical compliance
+\appendix
+\section{Appendix A: Glossary}
+See document content for full definitions of: LACPD, NLP, OCR, AWS, RBAC, MFA, RTO, RPO, GDPR, CCPA.
+
+\section{Appendix B: System Models}
+ This appendix will contain the models that visually represent the system's design and its
+ interactions. For this project, include:
+\begin{itemize}
+  \item Data Flow Diagram (DFD)  Visual representation of how court transcripts flow through the
+ system, including upload, OCR processing, analysis, and output.
+  \item Entity-Relationship Diagram (ERD): Show relationships between core database entities,
+ such as: 
+	\begin{itemize}
+		\item Transcripts
+		\item Cases
+		\item Users
+		\item Flags
+	\end{itemize}
+  \item State Transition Diagram: Define how documents move between states (e.g., Uploaded-
+ Processed- Flagged- Reviewed)
+  \item System Architecture Diagram: High-level diagram illustrating AWS services (e.g., S3,
+ SageMaker, Comprehend) and how they interact with the system.
+\end{itemize}
+ Each of these models should be created using tools like Lucidchart, Visio, or similar, and
+ attached here for clarity
+
+\section{Appendix C: To Be Determined List}
+ Collect a numbered list of the TBD (to be determined) references that remain in the SRS so they
+ can be tracked to closure
+\begin{itemize}
+  \item TBD-1: Define exact user response times
+  \item TBD-2: Finalize max user capacity
+  \item TBD-3: Acceptable transcript upload latency
+  \item TBD-4: Salesforce integration confirmation
+  \item TBD-5: NLP model accuracy benchmarks
+\end{itemize}
+
+\end{document}
