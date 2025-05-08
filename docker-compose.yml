@@ -1,0 +1,54 @@
+version: "3.9"
+
+services:
+    frontend:
+        image: node:24-alpine
+	container_name: frontend
+	working_dir: /app
+	volumes:
+	    - ./frontend:/app
+	ports:
+	    - "3000:3000"
+	command: npm run dev
+	environment:
+	    - BACKEND_URL=http://backend:8000
+	depends_on:
+	    - backend
+    backend:
+	image: python:3.11-slim
+	container_name: backend
+	working_dir: /app
+	volumes:
+	    - ./backend:/app
+	ports:
+	    - "8000:8000"
+	command: uvicorn main:app --host 0.0.0.0 --port 8000
+	environment:
+	    - BOX_API_KEY=key_go_here
+	    - MODEL_PATH=models/llama
+	depends_on:
+	    - llama
+	
+    llama:
+	image: python:3.11-slim
+	container_name: llama
+	volumes:
+	    - ./models/llama:/models/llama
+	working_dir: /models/llama
+	command: python run_llama.py
+
+    langchain:	
+        image: python:3.11-slim
+	container_name: langchain
+	volumes:
+	    - ./langchain:/app
+	working_dir: /app
+	command: python enrich_docs.py
+	
+    dataprocessor:
+	image: python:3.11-slim
+	container_name: dataprocessor
+	volumes:
+	    - ./processing:/app
+	working_dir: /app
+	command: python process.py
