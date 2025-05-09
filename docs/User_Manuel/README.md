@@ -49,7 +49,7 @@ To run the system locally:
 ## 5. Jira Link
 
 All tasks, sprint assignments, and issue tracking are managed on Jira:  
-[https://bandra.atlassian.net/jira/projects?page=1&sortKey=name&sortOrder=ASC&types=software%2Cbusiness](https://bandra.atlassian.net/jira/projects?page=1&sortKey=name&sortOrder=ASC&types=software%2Cbusiness)
+[[https://bandra.atlassian.net/jira/projects?page=1&sortKey=name&sortOrder=ASC&types=software%2Cbusiness](https://bandra.atlassian.net/jira/projects?page=1&sortKey=name&sortOrder=ASC&types=software%2Cbusiness)](https://bandra.atlassian.net/jira/software/projects/CF/boards/5)
 
 ---
 
