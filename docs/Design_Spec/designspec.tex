@@ -1,1 +1,154 @@
 
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{longtable}
+\usepackage{hyperref}
+\usepackage{titlesec}
+\usepackage{fancyhdr}
+\usepackage{graphicx}
+
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{CS3338 Final - LACPD1}
+\lhead{Design Spec}
+\rfoot{Page \thepage}
+
+\titleformat{\section}{\large\bfseries}{\thesection}{1em}{}
+\titleformat{\subsection}{\normalsize\bfseries}{\thesubsection}{1em}{}
+
+\title{Design Spec \\
+CS3338 Final Based On LACPD1: AI-Powered Legal Analysis of Police Misconduct}
+\author{Group 1: Brian Andrade, Christian Garcia, Haonan Ma, Jared Martinez, Alejandro Vargas}
+\date{Version 0.6 \\ 5/09/2025}
+
+\begin{document}
+\maketitle
+\thispagestyle{empty}
+\newpage
+
+\tableofcontents
+\thispagestyle{empty}
+\newpage
+
+\newpage
+\section{Introduction}
+\subsection{Purpose}
+The Design Spec serves as a breakdown of the project components and tools used.
+
+\subsection{Intended Audience}
+\begin{itemize}
+\item Developers – To understand decisions made
+\item Documentation Writers – To track tools used and why
+\end{itemize}
+
+\newpage
+\section{Project Components}
+
+\begin{itemize}
+    \item \textbf{Login Page} 
+    Upon loading the application, users are presented with the login screen. Only authenticated users can log in and proceed further.
+
+    \item \textbf{Dashboard View}
+    Once logged in, users are directed to the main dashboard.
+    Here, they can view their document history and utilize the
+    upload function to submit new documents and analyze.
+
+    \item \textbf{Upload} 
+    Users are directed to the upload interface after clicking
+    the Upload button, either from the sidebar or the main
+    dashboard. They can then select a file to begin the
+    document analysis process.
+
+    \item \textbf{Analyzed View}
+    After clicking continue in the upload interface, the main
+    dashboard is dynamically updated to display the uploaded
+    document in the main panel, while a new analysis section
+    appears to the right.
+
+    \item \textbf{OCR and Text Cleaning}
+    Take raw court transcripts in PDF format are uploaded to AWS
+    S3 bucket, extract text from scanned documents. Then text is cleaned to fix OCR errors, remove unnecessary formatting, and prepare content for reliable
+    downstream processing
+
+    \item \textbf{Semantic Chunking} (Document Splitting)
+    Transcript content is cleaned (remove artifacts like line
+    breaks, OCR noise, and inconsistent formatting), then split into
+    semantically meaningful segments using langchain’s
+    SemanticChunker, semantically coherent text chunks.
+
+    \item \textbf{Embedding (Cohere via Bedrock)}
+        After transcripts are cleaned and semantically
+        chunked, each chunk is passed through the
+        Cohere embedding model, which transforms
+        the text into high-dimensional vector. These
+        vectors numerically capture the semantic
+        meaning of each chunk, enabling meaningful
+        similarity comparison with future queries.
+
+    \item \textbf{Metadata Term Enrichment}
+        After transcripts are cleaned and converted into
+        semantic chunks and vector embeddings, we
+        enhance each chuck with structured metadata
+        such as officer names, case numbers, and
+        locations. The .faiss and .pk1 files generated in
+        step 3 are loaded and used to retrieve the original
+        chunks. Titan Text Premier is applied to extract
+        relevant metadata, and Claude is optionally
+        tested using the Cohere vector store for
+        comparison. Enriched outputs are stored as .json
+        files. All vectorstores are then merged to support
+        unified retrieval and downstream querying.
+
+    \item \textbf{Rag-Based Question Answering}
+    To enable question answering, the system performs a
+    similarity search over the enriched vectorstore using a
+    user query. It retrieves the top-matching transcript
+    chunks and extracts glossary terms and named entities
+    from metadata. This context is compiled into a prompt
+    and passed to the Titan LLM. The model then returns a
+    structured natural-language answer grounded in the
+    transcript content and legal terminology.}
+    
+
+    
+\end{itemize}
+
+\newpage
+
+
+
+\section{Included Tools}
+
+\begin{itemize}
+    \item \textbf{Next.js:} Framework for building fast, modern web apps with smooth routing and page transitions.
+    \item \textbf{Tailwind CSS:} CSS framework used for consistent, responsive, and clean styling.
+    \item \textbf{Shadcn/ui:} Library of accessible and customizable UI components that accelerated development and ensure design consistency.
+    \item \textbf{ TypeScript: } Used for type safety and better development experience across the codebase.
+    \item \textbf{ FastAPI:} Loads: your cleaned transcripts, FAISS vectorstores, glossary
+    \item \textbf {Endpoints:}
+        GET /transcripts → list all raw transcript filenames
+        GET /search/{model} → semantic search over FAISS index
+        POST /ask → retrieval-augmented QA using Titan + glossary
+    \item  \textbf{Uvicorn:}
+    An ASGI server that hosts FastAPI in a long-running process
+
+    \item \textbf{AWS Services:}
+     EC2: runs Uvicorn + FastAPI, IAM role grants S3 access
+     S3: stores raw PDFs, cleaned transcripts, chunks, precomputed FAISS .faiss \& .pkl files
+     Bedrock (Titan): powers the LLM in the RAG endpoint
+
+     \item \textbf{Langchain’s SemanticChunker}
+      Prepare the text for embedding by maintaining logical
+      boundaries between ideas, which enhances the accuracy and
+      relevance of downstream document retrieval during query time.
+
+    
+     
+\end{itemize}
+
+
+\newpage
+
+\newpage
+
+\end{document}
